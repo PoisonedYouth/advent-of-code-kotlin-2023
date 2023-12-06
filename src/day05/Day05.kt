@@ -38,36 +38,34 @@ fun main() {
         result.toList()
     }
 
-    val searchValueNew: (List<Mapping>, Long) -> Long = { mappings, seeds ->
-        var value = seeds
+    val getLocation: (List<Mapping>, List<Long>) -> List<Long> = { mappings, seeds ->
+        val values = seeds.toMutableList()
         mappings.forEach { mapping ->
-            value = mapping.ranges.minOf {
-                if (value in it.first) {
-                    val index = value - it.first.first
-                    it.second.first + index
-                } else {
-                    Long.MAX_VALUE
+            values.forEachIndexed { i, seed ->
+                val result = mapping.ranges.minOf {
+                    if (seed in it.first) {
+                        val newValue = values[i] - it.first.first
+                        it.second.first + newValue
+                    } else {
+                        Long.MAX_VALUE
+                    }
+                }
+                if (result < Long.MAX_VALUE) {
+                    values[i] = result
                 }
             }
         }
-        value
+        values
     }
 
-    fun getLocation(result: List<Mapping>, seed: Long): Long {
-        return searchValueNew(result, seed)
-    }
 
     fun part1(input: List<String>): Long {
         val result = extractMap(input)
 
-        var minLoc = Long.MAX_VALUE
-        val seeds = NUMBER_REGEX.findAll(input.first()).map { it.value.toLong() }
-        seeds.forEach { seed ->
-            val location = getLocation(result, seed)
-            if (minLoc > location)
-                minLoc = location
-        }
-        return minLoc.also {
+        val seeds = NUMBER_REGEX.findAll(input.first()).map { it.value.toLong() }.toList()
+        val location = getLocation(result, seeds)
+
+        return location.min().also {
             check(it == 389056265L) {
                 "Expected result is not equal to current result '$it'"
             }
@@ -82,13 +80,12 @@ fun main() {
             .chunked(2).map {
                 it.first()..<it.first() + it.last()
             }.toList()
+
         var minLoc = Long.MAX_VALUE
         seedsRange.forEach {
-            for (seed in it.first..it.last) {
-                val location = getLocation(result, seed)
-                if (minLoc > location)
-                    minLoc = location
-            }
+            val location = getLocation(result, it.toList())
+            if (minLoc > location.min())
+                minLoc = location.min()
         }
         return minLoc.also {
             check(it == 137516820L) {
