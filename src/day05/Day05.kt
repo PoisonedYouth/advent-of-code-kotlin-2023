@@ -82,11 +82,15 @@ fun main() {
             }.toList()
 
         var minLoc = Long.MAX_VALUE
-        seedsRange.forEach {
-            val location = getLocation(result, it.toList())
-            if (minLoc > location.min())
-                minLoc = location.min()
-        }
+            seedsRange.forEach {
+                it.chunked(1000){ chunk ->
+                    val location = getLocation(result, chunk.toList())
+                    if (minLoc > location.min())
+                        minLoc = location.min()
+                }
+
+            }
+
         return minLoc.also {
             check(it == 137516820L) {
                 "Expected result is not equal to current result '$it'"
