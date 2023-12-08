@@ -1,4 +1,4 @@
-package day07
+package day08
 
 import readInput
 import kotlin.system.measureTimeMillis
@@ -149,9 +149,9 @@ fun main() {
 
     val input = readInput("day07/Day07")
     measureTimeMillis {
-        part1(input).let { println(it) }
+        println(part1(input))
     }.also { println("Part 1 took: $it nano seconds.") }
     measureTimeMillis {
-        part2(input).let { println(it) }
+        println(part2(input))
     }.also { println("Part 2 took: $it nano seconds.") }
 }
