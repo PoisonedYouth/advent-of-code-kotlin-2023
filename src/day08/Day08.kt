@@ -116,11 +116,11 @@ fun main() {
         }
     }
 
-    val input = readInput("day08/Day08")
+    val input = readInput("day09/Day08")
     measureTimeMillis {
-        part1(input).let { println(it) }
+        println(part1(input))
     }.also { println("Part 1 took: $it nano seconds.") }
     measureTimeMillis {
-        part2(input).let { println(it) }
+        println(part2(input))
     }.also { println("Part 2 took: $it nano seconds.") }
 }
